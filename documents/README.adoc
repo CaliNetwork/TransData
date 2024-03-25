@@ -1,0 +1,98 @@
+= Transdata
+
+image::https://raw.githubusercontent.com/CaliNetwork/TransData/main/artworks/logo.svg[]
+
+The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
+
+== Designs
+
+> API Structure
+
+[plantuml]
+....
+@startmindmap
+* TransDataAPI
+    *[#lightblue] UserGateway
+        *[#lightblue] Manage
+            *[#lightblue] User
+                *[#lightgreen] GetToken
+                *[#lightgreen] Register
+                *[#lightgreen] RequestRemoval
+                *[#lightgreen] ResetPassword
+            *[#lightblue] VM/<uuid>
+                *[#lightgreen] Reboot
+                *[#lightgreen] Shutdown
+                *[#lightgreen] Boot
+                *[#lightgreen] Rebuild<os>
+        *[#lightblue] Statics
+            *[#lightgreen] GetUser
+            *[#lightgreen] GetBilling
+            *[#lightgreen] GetTicket
+            *[#lightgreen] GetService
+            *[#lightgreen] GetVM
+
+    *[#blue] AdminGateway
+        *[#blue] Manage
+            *[#blue] User
+                *[#red] ModifyUserObject
+                *[#red] BanUser
+                *[#red] UnBanUser
+                *[#red] ApplyOrder
+            *[#blue] Billing
+                *[#red] SetBillingMethod
+                *[#red] ApplyRefund
+                *[#red] ModifyBillingObject
+            *[#blue] Ticket
+                *[#red] CreateTicket
+                *[#red] CloseTicket
+                *[#red] ModifyTicketObject
+            *[#blue] Cluster
+                *[#red] AddCluster
+                *[#red] SetClusterToken
+                *[#red] RemoveCluster
+                *[#red] ModifyClusterObject
+            *[#blue] VM
+                *[#red] ModifyVMObject
+                *[#red] DeleteVM
+                *[#red] AddVM
+        *[#blue] Statics
+            *[#red] GetBillingStatics
+            *[#red] GetUserList
+            *[#red] GetBillingList
+            *[#red] GetTicketList
+            *[#red] GetClusterList
+            *[#red] GetClusterStatus
+            *[#red] GetVMStatus
+@endmindmap
+....
+
+> Auth Model
+
+[plantuml]
+....
+@startuml
+start
+
+if (user and password match) then (yes)
+  #green:[AWAIT] Generate token and writing into mongodb;
+else (no)
+  #red:set status code 403;
+endif
+#lightblue:Return result;
+
+stop
+@enduml
+
+@startuml
+start
+
+if (token is vaild) then (yes)
+  #green:[AWAIT] Process Callback function;
+else (no)
+  #red:set status code 403;
+endif
+#lightblue:Return result;
+
+stop
+@enduml
+....
