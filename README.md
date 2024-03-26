@@ -1,32 +1,25 @@
-<figure>
-<img
-src="https://raw.githubusercontent.com/CaliNetwork/TransData/main/artworks/logo.svg"
-alt="logo" />
-</figure>
+# ![logo](https://raw.githubusercontent.com/CaliNetwork/TransData/main/artworks/logo.svg)
 
 The Integrated dashboard for cloud service, build for Hairpin Cloud
 Platform™
 
-# Designs
+![MadeinTainan](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/MITN.svg)
+![MadeinTaiChung](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/MITC.svg)
+![MadeinTX](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/MITX.svg)
+
+## Dashboard
+### Designs
 
 > API Structure
 
-<img
-src="https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/api.svg"
-alt="api" />
+![api](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/api.svg)
 
 > DB Structure
 
-<img
-src="https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/db.svg"
-alt="api" />
+![db](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/db.svg)
 
 > Auth Model
 
-<img
-src="https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/auth1.svg"
-alt="auth1" />
+![auth1](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/auth1.svg)
 
-<img
-src="https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/auth2.svg"
-alt="auth2" />
+![auth2](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/auth2.svg)
