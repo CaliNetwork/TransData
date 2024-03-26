@@ -26,7 +26,8 @@ export let main: mainVar = {
   debug: args.v || args.verbose || false,
   listen: args.l || args.listen || '127.0.0.1',
   port: args.p || args.port || 8080,
-  db: args.d || args.database || 'mongodb://localhost:27017'
+  db: args.d || args.database || 'mongodb://localhost:27017',
+  cachedb: args.c || args.cachedb || 'redis://127.0.0.1:6379'
 };
 
 const app = new Elysia()

@@ -17,53 +17,93 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
             *[#lightblue] User
                 *[#lightgreen] GetToken
                 *[#lightgreen] Register
-                *[#lightgreen] RequestRemoval
                 *[#lightgreen] ResetPassword
-            *[#lightblue] VM/<uuid>
-                *[#lightgreen] Reboot
-                *[#lightgreen] Shutdown
-                *[#lightgreen] Boot
-                *[#lightgreen] Rebuild<os>
+            *[#lightblue] Order
+                *[#lightgreen] PlaceOrder
+                *[#lightgreen] CancelOrder
+            *[#lightblue] Billing
+                *[#lightgreen] PaymentGateway
+            *[#lightblue] Ticket
+                *[#lightgreen] ModifyTicket
+            *[#lightblue] Service
+                *[#lightblue] VM/<uuid>
+                    *[#lightgreen] Reboot
+                    *[#lightgreen] Shutdown
+                    *[#lightgreen] Boot
+                    *[#lightgreen] Rebuild<os>
+                    *[#lightgreen] RequestRemoval
+                *[#lightblue] PortForwarding/<uuid>
+                    *[#lightgreen] Modify
+                    *[#lightgreen] Delete
         *[#lightblue] Statics
             *[#lightgreen] GetUser
+            *[#lightgreen] GetOrder
             *[#lightgreen] GetBilling
             *[#lightgreen] GetTicket
             *[#lightgreen] GetService
-            *[#lightgreen] GetVM
 
-    *[#blue] AdminGateway
-        *[#blue] Manage
-            *[#blue] User
-                *[#red] ModifyUserObject
-                *[#red] BanUser
-                *[#red] UnBanUser
-                *[#red] ApplyOrder
-            *[#blue] Billing
-                *[#red] SetBillingMethod
-                *[#red] ApplyRefund
-                *[#red] ModifyBillingObject
-            *[#blue] Ticket
-                *[#red] CreateTicket
-                *[#red] CloseTicket
-                *[#red] ModifyTicketObject
-            *[#blue] Cluster
-                *[#red] AddCluster
-                *[#red] SetClusterToken
-                *[#red] RemoveCluster
-                *[#red] ModifyClusterObject
-            *[#blue] VM
-                *[#red] ModifyVMObject
-                *[#red] DeleteVM
-                *[#red] AddVM
-        *[#blue] Statics
-            *[#red] GetBillingStatics
-            *[#red] GetUserList
-            *[#red] GetBillingList
-            *[#red] GetTicketList
-            *[#red] GetClusterList
-            *[#red] GetClusterStatus
-            *[#red] GetVMStatus
+    *[#orange] AdminGateway
+        *[#orange] Manage
+            *[#orange] User
+                *[#pink] ModifyUserObject
+            *[#orange] Order
+                *[#pink] ModifyOrderObject
+            *[#orange] Billing
+                *[#pink] SetBillingMethod
+                *[#pink] ApplyRefund
+                *[#pink] ModifyBillingObject
+            *[#orange] Ticket
+                *[#pink] ModifyTicketObject
+            *[#orange] Cluster
+                *[#pink] SetClusterToken
+                *[#pink] RemoveCluster
+                *[#pink] ModifyClusterObject
+            *[#orange] Service
+                *[#pink] ModifyServiceObject
+                *[#pink] DeleteService
+            *[#orange] ServiceTemplate
+                *[#pink] ModifyServiceTemplateObject
+                *[#pink] DeleteServiceTemplate
+        *[#orange] Statics
+            *[#pink] GetUser
+            *[#pink] GetOrder
+            *[#pink] GetBillingStatics
+            *[#pink] GetBilling
+            *[#pink] GetTicket
+            *[#pink] GetCluster
+            *[#pink] GetClusterStatus
+            *[#pink] GetService
+            *[#pink] GetServiceStatus
 @endmindmap
+....
+
+> Database model
+
+[plantuml]
+....
+@startuml
+object user {
+    UserObject
+}
+object service {
+    serviceObject
+}
+object billing {
+    billingObject
+}
+object ticket {
+    ticketObject
+}
+object order {
+    orderObject
+}
+object settings {
+    billingConfigure
+    clusterConfigure
+    siteConfigure
+    serviceTemplate
+}
+@enduml
 ....
 
 > Auth Model
@@ -76,7 +116,7 @@ start
 if (user and password match) then (yes)
   #green:[AWAIT] Generate token and writing into mongodb;
 else (no)
-  #red:set status code 403;
+  #pink:set status code 403;
 endif
 #lightblue:Return result;
 
@@ -89,7 +129,7 @@ start
 if (token is vaild) then (yes)
   #green:[AWAIT] Process Callback function;
 else (no)
-  #red:set status code 403;
+  #pink:set status code 403;
 endif
 #lightblue:Return result;
 

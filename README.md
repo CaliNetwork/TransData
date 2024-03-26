@@ -15,6 +15,12 @@ Platform™
 src="https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/api.svg"
 alt="api" />
 
+> DB Structure
+
+<img
+src="https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/db.svg"
+alt="api" />
+
 > Auth Model
 
 <img
