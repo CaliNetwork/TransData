@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
 import { mainVar } from "./type";
 import { getIP, IPHeaders } from "elysia-ip";
+import { database } from "./mongodb";
 
 const ip = (config: {
   checkHeaders?: IPHeaders[]
@@ -30,9 +31,12 @@ export let main: mainVar = {
   cachedb: args.c || args.cachedb || 'redis://127.0.0.1:6379'
 };
 
+// Connect to the database
+const db = await database(main.db);
+
 const app = new Elysia()
-.use(ip())
-.listen({
-  hostname: main.listen,
-  port: main.port
-});
+  .use(ip())
+  .listen({
+    hostname: main.listen,
+    port: main.port
+  });

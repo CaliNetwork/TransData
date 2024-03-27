@@ -114,7 +114,7 @@ object settings {
 start
 
 if (user and password match) then (yes)
-  #green:[AWAIT] Generate token and writing into mongodb;
+  #green:[AWAIT] Generate a token and write it into mongodb;
 else (no)
   #pink:set status code 403;
 endif

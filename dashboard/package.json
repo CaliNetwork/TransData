@@ -9,6 +9,7 @@
     "elysia": "latest",
     "elysia-ip": "^0.0.7",
     "minimist": "^1.2.8",
+    "mongodb": "^6.5.0",
     "toolbx": "^1.0.8"
   },
   "devDependencies": {
