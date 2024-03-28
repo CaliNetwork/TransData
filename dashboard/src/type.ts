@@ -1,6 +1,5 @@
 export interface mainVar {
     version: string
-    debug: boolean
     listen: string
     port: number
     db: string
@@ -14,6 +13,7 @@ export interface userObject {
     isbanned: boolean
     balance: number
     register_on: number
+    isAdmin: boolean
 }
 
 export interface orderObject {
@@ -47,10 +47,6 @@ export interface clusterObject {
     apiurl: string
 }
 
-export interface clusterConfigure {
-    token: string
-}
-
 export interface serviceObject {
     uuid: string
     cluster_uuid: string
@@ -61,6 +57,27 @@ export interface serviceObject {
         portRange?: number[]
     }
     spe_details?: vmService | portForwardingService
+}
+
+export interface billingConfigure {
+    cata: settingsCata
+    currency: string
+}
+
+export interface clusterConfigure {
+    cata: settingsCata
+    token: string
+}
+
+export interface siteConfigure {
+    cata: settingsCata
+    hasSetup: boolean
+    rootToken: string
+}
+
+export interface serviceTemplate {
+    cata: settingsCata
+    templates: serviceTemplateObject[]
 }
 
 export interface serviceTemplateObject {
@@ -81,11 +98,6 @@ export interface serviceTemplateObject {
         traffic: number
     }
 }
-
-export interface billingConfigure {
-    currency: string
-}
-
 // Componments
 
 interface vmService {
@@ -121,4 +133,11 @@ enum billing_cycle {
     quarterly,
     semi_annually,
     annually,
+}
+
+enum settingsCata {
+    billingConfigure,
+    clusterConfigure,
+    siteConfigure,
+    serviceTemplate
 }
