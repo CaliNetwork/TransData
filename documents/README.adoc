@@ -12,7 +12,7 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
 ....
 @startmindmap
 * TransDataAPI
-    *[#lightblue] UserGateway
+    *[#lime] Gateway
         *[#lightblue] Manage
             *[#lightblue] User
                 *[#lightgreen] GetToken
@@ -42,8 +42,7 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
             *[#lightgreen] GetTicket
             *[#lightgreen] GetService
 
-    *[#orange] AdminGateway
-        *[#orange] Manage
+        *[#orange] AdminManage
             *[#orange] User
                 *[#pink] ModifyUserObject
             *[#orange] Order
@@ -64,7 +63,7 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
             *[#orange] ServiceTemplate
                 *[#pink] ModifyServiceTemplateObject
                 *[#pink] DeleteServiceTemplate
-        *[#orange] Statics
+        *[#orange] AdminStatics
             *[#pink] GetUser
             *[#pink] GetOrder
             *[#pink] GetBillingStatics
