@@ -13,10 +13,10 @@ class Utils {
             return JSON.stringify(error)
         }
     }
-    async getUserObject(queryString: string): Promise<null | string | WithId<userObject>> {
+    async getUserObject(queryString: string): Promise<null | string | WithId<userObject>> { //fixme
         try {
             const document = await db.collection('users').findOne({
-                cata: 'siteConfigure'
+                cata: 'siteConfigure' 
             }) as WithId<userObject> | null;
             return document
         } catch (error) {

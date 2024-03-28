@@ -101,6 +101,7 @@ object settings {
     clusterConfigure
     siteConfigure
     serviceTemplate
+    siteBroadcast
 }
 @enduml
 ....
