@@ -1,3 +1,5 @@
+import { HTTPMethod } from "elysia"
+
 export interface mainVar {
     version: string
     listen: string
@@ -140,4 +142,36 @@ enum settingsCata {
     clusterConfigure,
     siteConfigure,
     serviceTemplate
+}
+
+
+// In-Program components
+
+export interface dataObject {
+    user_uuid: string
+    token: string
+    [key: string]: any
+}
+
+export interface resultObject {
+    succeed: boolean
+    msg: string
+    data: any
+}
+
+export interface requestObject {
+    body: any
+    query: Record<string, string | undefined>
+    params: Record<string, string | undefined>
+    headers: Record<string, string | undefined>
+    response: resultObject
+    path: string,
+    ip: string
+};
+
+export interface routerObject {
+    path: string
+    handler: (contents: requestObject) => Promise<string>
+    isAdmin: boolean,
+    authType: string
 }

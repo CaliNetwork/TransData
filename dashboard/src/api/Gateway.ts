@@ -1,7 +1,11 @@
-export const Gateway = async (user_uuid: string, user_token: string, app: () => Promise<string>): Promise<string> => {
+import { dataObject, requestObject, resultObject } from "../type"
 
-}
+export const Gateway = async (content: requestObject, app: () => Promise<string>): Promise<string> => {
+    let result:resultObject  = {
+        succeed: false,
+        msg: "",
+        data: undefined
+    }
 
-export const getToken = async (user_email: string, password: string): Promise<string> => {
-    
+    return JSON.stringify(result)
 }

@@ -35,7 +35,7 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
                 *[#lightblue] PortForwarding/<uuid>
                     *[#lightgreen] Modify
                     *[#lightgreen] Delete
-        *[#lightblue] Statics
+        *[#lightblue] Stats
             *[#lightgreen] GetUser
             *[#lightgreen] GetOrder
             *[#lightgreen] GetBilling
@@ -63,10 +63,10 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
             *[#orange] ServiceTemplate
                 *[#pink] ModifyServiceTemplateObject
                 *[#pink] DeleteServiceTemplate
-        *[#orange] AdminStatics
+        *[#orange] AdminStats
             *[#pink] GetUser
             *[#pink] GetOrder
-            *[#pink] GetBillingStatics
+            *[#pink] GetBillingStats
             *[#pink] GetBilling
             *[#pink] GetTicket
             *[#pink] GetCluster

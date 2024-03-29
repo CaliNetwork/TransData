@@ -1,8 +1,11 @@
 import { Elysia, t } from "elysia";
-import { mainVar } from "./type";
+import { mainVar, requestObject } from "./type";
 import { getIP, IPHeaders } from "elysia-ip";
 import { database } from "./mongodb";
 import { isDBSetup } from "./setup_db";
+import { Routers } from "./api/Routers";
+import { logger } from "toolbx";
+import { Gateway } from "./api/Gateway";
 
 const ip = (config: {
   checkHeaders?: IPHeaders[]
@@ -46,3 +49,16 @@ const app = new Elysia()
     hostname: main.listen,
     port: main.port
   });
+// Load routers
+  Routers.forEach((obj) => {
+    app.get(obj.path, async (content: requestObject) => {
+      if (hasDebug) logger(`audit> ${String(content.ip)} requested ${content.path}`, 4);
+      switch (obj.authType) {
+        case 'token':
+          return await Gateway(content,() => obj.handler(content))
+        case 'none':
+        default:
+          return await obj.handler(content)
+      }
+    })
+  })
