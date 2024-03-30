@@ -1,8 +1,8 @@
-import { Elysia, t } from "elysia";
-import { mainVar, requestObject } from "./type";
+import { Elysia } from "elysia";
+import { mainVar, requestObject, resultObject } from "./misc/type";
 import { getIP, IPHeaders } from "elysia-ip";
-import { database } from "./mongodb";
-import { isDBSetup } from "./setup_db";
+import { database } from "./db/mongodb";
+import { isDBSetup } from "./db/setup_db";
 import { Routers } from "./api/Routers";
 import { logger } from "toolbx";
 import { Gateway } from "./api/Gateway";
@@ -38,6 +38,7 @@ export let main: mainVar = {
 export let resetDB = args.resetDB || false;
 export let hasDebug = args.v || args.verbose || false;
 export const db = await database(main.db);
+export const date = new Date
 
 // database setup
 await isDBSetup(resetDB)
@@ -45,20 +46,35 @@ await isDBSetup(resetDB)
 const app = new Elysia()
   .use(ip())
   .get('/', () => `TransDataAPIserver VER ${main.version}`) // Send back server banner
-  .listen({
-    hostname: main.listen,
-    port: main.port
-  });
 // Load routers
-  Routers.forEach((obj) => {
-    app.get(obj.path, async (content: requestObject) => {
-      if (hasDebug) logger(`audit> ${String(content.ip)} requested ${content.path}`, 4);
+Routers.forEach((obj) => {
+  app.all(obj.path, async (content: requestObject) => {
+    try {
+      const date = new Date();
+      if (hasDebug) logger(`audit> ${date} => ${JSON.stringify(content)}`, 4);
       switch (obj.authType) {
         case 'token':
-          return await Gateway(content,() => obj.handler(content))
+          return await Gateway(content, obj.isAdmin, () => obj.handler(content))
         case 'none':
         default:
           return await obj.handler(content)
       }
-    })
-  })
+    } catch (error) {
+      let errMsg = String(error);
+      if (error instanceof Error) {
+        errMsg = error.message;
+      }
+      const result: resultObject = {
+        succeed: false,
+        msg: errMsg,
+        data: undefined
+      }
+      return JSON.stringify(result)
+    }
+  }, obj.schema)
+})
+
+app.listen({
+  hostname: main.listen,
+  port: main.port
+});

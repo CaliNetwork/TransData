@@ -1,5 +1,3 @@
-import { HTTPMethod } from "elysia"
-
 export interface mainVar {
     version: string
     listen: string
@@ -16,6 +14,7 @@ export interface userObject {
     balance: number
     register_on: number
     isAdmin: boolean
+    token: string
 }
 
 export interface orderObject {
@@ -155,8 +154,13 @@ export interface dataObject {
 
 export interface resultObject {
     succeed: boolean
-    msg: string
+    msg: string | undefined
     data: any
+}
+
+export interface returnObejct {
+    msg?: string,
+    data?: any
 }
 
 export interface requestObject {
@@ -171,7 +175,8 @@ export interface requestObject {
 
 export interface routerObject {
     path: string
-    handler: (contents: requestObject) => Promise<string>
+    handler: (contents: requestObject) => Promise<returnObejct>
     isAdmin: boolean,
-    authType: string
+    authType: string,
+    schema?: any
 }

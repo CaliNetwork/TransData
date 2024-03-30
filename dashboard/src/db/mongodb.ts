@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { logger } from "toolbx";
-import { hasDebug } from ".";
+import { hasDebug } from "..";
 
 export const database = async (url: string) => {
     let isOnline: boolean = false

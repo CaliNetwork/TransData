@@ -1,5 +1,5 @@
 import { logger, generateToken } from "toolbx";
-import { db, hasDebug } from "."
+import { db, hasDebug } from ".."
 
 const setupDB = async (collectionsToCheck: string[]): Promise<void> => {
     try {
