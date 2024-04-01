@@ -1,4 +1,4 @@
-import { WithId } from "mongodb";
+import { InsertOneResult, UpdateResult, WithId } from "mongodb";
 import { db } from "..";
 import { siteConfigure, userObject } from "./type";
 
@@ -9,7 +9,10 @@ class Utils {
         }) as WithId<siteConfigure> | null;
         return document
     }
-    async getUserObject(type: string, query: string): Promise<undefined | WithId<userObject>> { //fixme
+    async writeUserObject(userObject: userObject): Promise<InsertOneResult> {
+        return await db.collection('users').insertOne(userObject)
+    }
+    async getUserObject(type: string, query: string): Promise<null | WithId<userObject>> { //fixme
         let document = null;
         switch (type) {
             case 'uuid':
@@ -30,8 +33,14 @@ class Utils {
             default:
                 throw new Error(`utils.getUserObject unknown query type ${type}`)
         }
-        if (document === null) document = undefined;
-        return document 
+        return document
+    }
+    async updateUserObject(user_uuid: string, updateObject: object): Promise<UpdateResult> {
+        return await db.collection('users').updateOne({
+            uuid: user_uuid
+        }, {
+            $set: updateObject
+        })
     }
 }
 

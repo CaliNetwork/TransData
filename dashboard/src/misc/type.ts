@@ -14,7 +14,7 @@ export interface userObject {
     balance: number
     register_on: number
     isAdmin: boolean
-    token: string
+    token?: string
 }
 
 export interface orderObject {
@@ -158,8 +158,9 @@ export interface resultObject {
     data: any
 }
 
-export interface returnObejct {
-    msg?: string,
+export interface returnObject {
+    succeed?: boolean
+    msg?: string
     data?: any
 }
 
@@ -170,12 +171,16 @@ export interface requestObject {
     headers: Record<string, string | undefined>
     response: resultObject
     path: string,
-    ip: string
+    ip?: {
+        address: string;
+        family: string;
+        port: number;
+    }
 };
 
 export interface routerObject {
     path: string
-    handler: (contents: requestObject) => Promise<returnObejct>
+    handler: (...args: any[]) => Promise<returnObject>
     isAdmin: boolean,
     authType: string,
     schema?: any
