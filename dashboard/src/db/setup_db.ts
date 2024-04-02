@@ -31,12 +31,12 @@ export const isDBSetup = async (resetDB: boolean): Promise<void> => {
         }
         if (hasDebug) logger('debug> Checking if the database has been set up', 4)
         const collectionsToCheck: string[] = [
-            'users',
-            'services',
-            'billings',
-            'tickets',
-            'orders',
-            'settings'
+            'user',
+            'service',
+            'billing',
+            'ticket',
+            'order',
+            'setting'
         ]
         const existingCollections = await db.listCollections().toArray();
         const missingCollections = collectionsToCheck.filter(collection =>

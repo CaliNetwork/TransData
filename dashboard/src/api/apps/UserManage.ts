@@ -1,7 +1,8 @@
 import { generateToken } from "toolbx";
-import { requestObject, returnObject, userObject } from "../../misc/type";
+import { requestObject, returnObject, ticketObject, userObject } from "../../misc/type";
 import { randomUUID } from "crypto";
 import utils from "../../misc/utils";
+import { WithId } from "mongodb";
 
 class UserManage {
     async register(contents: requestObject): Promise<returnObject> { //post
@@ -32,7 +33,7 @@ class UserManage {
         if (userObject) {
             if (await Bun.password.verify(requestObject.password, userObject.password)) {
                 const newToken = generateToken(32);
-                await utils.updateUserObject(userObject.uuid, {
+                await utils.updateUserObject(userObject._id, {
                     uuid: randomUUID(),
                     token: newToken
                 });
@@ -43,14 +44,39 @@ class UserManage {
         }
         return returnObject
     }
-    async resetPassword(contents: requestObject, userObject: userObject): Promise<returnObject> { //get
+    async resetPassword(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
-
-        const requestObject = contents.body;
-        utils.updateUserObject(userObject.uuid, {
+        utils.updateUserObject(userObject._id, {
             password: await Bun.password.hash(requestObject.password),
             token: undefined
         })
+        return returnObject
+    }
+    async modifyTicket(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+        let returnObject = {};
+        let newTicketObject;
+        if (requestObject.ticket_uuid) {
+            const ticketObject = await utils.getTicketObject(requestObject.ticket_uuid)
+            if (ticketObject) {
+                newTicketObject = {
+                    instance_uuid: requestObject.instance_uuid,
+                    contents: ticketObject.contents + requestObject.contents,
+                    isOpen: requestObject.isOpen
+                }
+                await utils.updateTicketObject(ticketObject._id, newTicketObject)
+            } else {
+                throw new Error("Ticket not found");
+            }
+        } else {
+            newTicketObject = {
+                uuid: randomUUID(),
+                user_uuid: userObject.uuid,
+                instance_uuid: requestObject.instance_uuid,
+                contents: requestObject.contents,
+                isOpen: true
+            }
+            utils.writeTicketObject(newTicketObject);
+        }
         return returnObject
     }
 }

@@ -1,32 +1,33 @@
-import { InsertOneResult, UpdateResult, WithId } from "mongodb";
+import { InsertOneResult, ObjectId, UpdateResult, WithId } from "mongodb";
 import { db } from "..";
-import { siteConfigure, userObject } from "./type";
+import { siteConfigure, ticketObject, userObject } from "./type";
 
 class Utils {
+    // User
     async getSiteConfigure(): Promise<null | string | WithId<siteConfigure>> {
-        const document = await db.collection('settings').findOne({
+        const document = await db.collection('setting').findOne({
             cata: 'siteConfigure'
         }) as WithId<siteConfigure> | null;
         return document
     }
     async writeUserObject(userObject: userObject): Promise<InsertOneResult> {
-        return await db.collection('users').insertOne(userObject)
+        return await db.collection('user').insertOne(userObject)
     }
     async getUserObject(type: string, query: string): Promise<null | WithId<userObject>> { //fixme
         let document = null;
         switch (type) {
             case 'uuid':
-                document = await db.collection('users').findOne({
+                document = await db.collection('user').findOne({
                     uuid: query
                 }) as WithId<userObject> | null;
                 break;
             case 'email':
-                document = await db.collection('users').findOne({
+                document = await db.collection('user').findOne({
                     email: query
                 }) as WithId<userObject> | null;
                 break;
             case 'token':
-                document = await db.collection('users').findOne({
+                document = await db.collection('user').findOne({
                     token: query
                 }) as WithId<userObject> | null;
                 break;
@@ -35,9 +36,26 @@ class Utils {
         }
         return document
     }
-    async updateUserObject(user_uuid: string, updateObject: object): Promise<UpdateResult> {
-        return await db.collection('users').updateOne({
-            uuid: user_uuid
+    async updateUserObject(objectID: ObjectId, updateObject: object): Promise<UpdateResult> {
+        return await db.collection('user').updateOne({
+            _id: objectID
+        }, {
+            $set: updateObject
+        })
+    }
+    // Ticket
+    async writeTicketObject(ticketObject: ticketObject): Promise<InsertOneResult> {
+        return await db.collection('ticket').insertOne(ticketObject)
+    }
+    async getTicketObject(ticket_uuid: string): Promise<null | WithId<ticketObject>> {
+        const document = await db.collection('ticket').findOne({
+            uuid: ticket_uuid
+        }) as  WithId<ticketObject> | null;
+        return document
+    }
+    async updateTicketObject(objectID: ObjectId, updateObject: object): Promise<UpdateResult> {
+        return await db.collection('ticket').updateOne({
+            _id: objectID
         }, {
             $set: updateObject
         })

@@ -35,4 +35,18 @@ export const Routers: routerObject[] = [
             })
         }
     },
+    {
+        path: "/api/manage/ticket/modifyticket",
+        handler: UserManage.modifyTicket,
+        isAdmin: false,
+        authType: "token",
+        schema: {
+            body: t.Object({
+                ticket_uuid: t.Optional(t.String()),
+                instance_uuid: t.Optional(t.String()),
+                contents: t.String(),
+                isOpen: t.Boolean()
+            })
+        }
+    }
 ]

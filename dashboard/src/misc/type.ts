@@ -37,8 +37,8 @@ export interface billingObject {
 export interface ticketObject {
     uuid: string
     user_uuid: string
-    instance_uuid: string
-    content: string
+    instance_uuid?: string
+    contents: string
     isOpen: boolean
 }
 
@@ -52,11 +52,6 @@ export interface serviceObject {
     uuid: string
     cluster_uuid: string
     template_uuid: string
-    connection_details: {
-        ipv4?: string
-        ipv6?: string
-        portRange?: number[]
-    }
     spe_details?: vmService | portForwardingService
 }
 
@@ -105,6 +100,11 @@ interface vmService {
     traffic_used: number
     hasTun: boolean
     os: string
+    connection_details: {
+        ipv4?: string
+        ipv6?: string
+        portRange?: number[]
+    }
 }
 
 interface portForwardingService {
@@ -115,6 +115,11 @@ interface portForwardingService {
     to: {
         ip: string
         port: number
+    },
+    connection_details: {
+        ipv4?: string
+        ipv6?: string
+        portRange?: number[]
     },
     traffic_used: number
 }
@@ -170,12 +175,7 @@ export interface requestObject {
     params: Record<string, string | undefined>
     headers: Record<string, string | undefined>
     response: resultObject
-    path: string,
-    ip?: {
-        address: string;
-        family: string;
-        port: number;
-    }
+    path: string
 };
 
 export interface routerObject {
