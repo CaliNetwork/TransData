@@ -30,20 +30,22 @@ class UserManage {
         const requestObject = contents.body;
         const userObject = await utils.getUserObject('email', requestObject.email);
         if (userObject) {
-            const newToken = generateToken(32);
-            await utils.updateUserObject(userObject.uuid, {
-                uuid: randomUUID(),
-                token: newToken
-            });
-            returnObject.data = newToken;
+            if (await Bun.password.verify(requestObject.password, userObject.password)) {
+                const newToken = generateToken(32);
+                await utils.updateUserObject(userObject.uuid, {
+                    uuid: randomUUID(),
+                    token: newToken
+                });
+                returnObject.data = newToken;
+            }
         } else {
-            throw new Error("User Not Found");
+            throw new Error("User Not Found or password incorrect");
         }
         return returnObject
     }
     async resetPassword(contents: requestObject, userObject: userObject): Promise<returnObject> { //get
         let returnObject: returnObject = {};
-        
+
         const requestObject = contents.body;
         utils.updateUserObject(userObject.uuid, {
             password: await Bun.password.hash(requestObject.password),
