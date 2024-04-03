@@ -90,13 +90,16 @@ object service {
 object billing {
     billingObject
 }
+object payment {
+    paymentObject
+}
 object ticket {
     ticketObject
 }
 object order {
     orderObject
 }
-object settings {
+object setting {
     billingConfigure
     clusterConfigure
     siteConfigure
