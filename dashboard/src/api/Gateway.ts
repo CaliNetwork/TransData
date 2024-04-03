@@ -12,7 +12,7 @@ export const Gateway = async (contents: requestObject, isAdmin: boolean, app: (c
     const Authorization = contents.headers.authorization.split(' ')
     if ((Authorization)[0] !== 'Bearer') throw new Error("Authorizarion schemes mismatched");
     // Get User Object
-    const userObject = await utils.getUserObject('token', Authorization[1]);
+    const userObject = await utils.getObject('user', 'token', Authorization[1]) as WithId<userObject> | null;
     if (!userObject) throw new Error('User Not Found or token refreshed');
     if (isAdmin && !userObject.isAdmin) throw new Error("Permission denied");
     const returnObject = await app(contents.body, userObject);

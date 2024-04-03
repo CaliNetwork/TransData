@@ -2,12 +2,6 @@ import { routerObject } from "../misc/type";
 import UserManage from "./apps/UserManage";
 import { t } from "elysia";
 
-const postWithPskAndEmail = {
-    body: t.Object({
-        email: t.String(),
-        password: t.String()
-    })
-}
 
 export const Routers: routerObject[] = [
     {
@@ -15,14 +9,27 @@ export const Routers: routerObject[] = [
         handler: UserManage.getToken,
         isAdmin: false,
         authType: "none",
-        schema: postWithPskAndEmail
+        schema: {
+            body: t.Object({
+                email: t.String(),
+                password: t.String()
+            })
+        }
     },
     {
         path: "/api/manage/user/register",
         handler: UserManage.register,
         isAdmin: false,
         authType: "none",
-        schema: postWithPskAndEmail
+        schema: {
+            body: t.Object({
+                email: t.String(),
+                password: t.String(),
+                address: t.Optional(t.String()),
+                phone_code: t.Optional(t.Numeric()),
+                phone_number: t.Optional(t.Numeric())
+            })
+        }
     },
     {
         path: "/api/manage/user/resetpassword",
@@ -42,10 +49,32 @@ export const Routers: routerObject[] = [
         authType: "token",
         schema: {
             body: t.Object({
-                ticket_uuid: t.Optional(t.String()),
-                instance_uuid: t.Optional(t.String()),
                 contents: t.String(),
-                isOpen: t.Boolean()
+                isOpen: t.Boolean(),
+                uuid: t.Optional(t.String()),
+                instance_uuid: t.Optional(t.String())
+            })
+        }
+    },
+    {
+        path: "/api/manage/order/placeorder",
+        handler: UserManage.placeOrder,
+        isAdmin: false,
+        authType: "token",
+        schema: {
+            body: t.Object({
+                template_uuid: t.String()
+            })
+        }
+    },
+    {
+        path: "/api/manage/order/cancelorder",
+        handler: UserManage.cancelOrder,
+        isAdmin: false,
+        authType: "token",
+        schema: {
+            body: t.Object({
+                uuid: t.String()
             })
         }
     }

@@ -1,64 +1,35 @@
 import { InsertOneResult, ObjectId, UpdateResult, WithId } from "mongodb";
 import { db } from "..";
-import { siteConfigure, ticketObject, userObject } from "./type";
+import { billingConfigure, billingObject, clusterConfigure, serviceObject, orderConfigure, orderObject, serviceTemplate, serviceTemplateObject, siteConfigure, ticketObject, userObject } from "./type";
+
+const collections: string[] = [
+    'user',
+    'service',
+    'billing',
+    'ticket',
+    'order',
+    'setting'
+]
 
 class Utils {
-    // User
-    async getSiteConfigure(): Promise<null | string | WithId<siteConfigure>> {
-        const document = await db.collection('setting').findOne({
-            cata: 'siteConfigure'
-        }) as WithId<siteConfigure> | null;
-        return document
+    async writeObject(cata: string, object: userObject | serviceObject | billingObject | ticketObject | orderObject | orderConfigure | billingConfigure | clusterConfigure | siteConfigure | serviceTemplate): Promise<InsertOneResult> {
+        if (!collections.includes(cata)) throw new Error("writeObject -> collection ${cata} is invaild");
+        return await db.collection(cata).insertOne(object)
     }
-    async writeUserObject(userObject: userObject): Promise<InsertOneResult> {
-        return await db.collection('user').insertOne(userObject)
-    }
-    async getUserObject(type: string, query: string): Promise<null | WithId<userObject>> { //fixme
-        let document = null;
-        switch (type) {
-            case 'uuid':
-                document = await db.collection('user').findOne({
-                    uuid: query
-                }) as WithId<userObject> | null;
-                break;
-            case 'email':
-                document = await db.collection('user').findOne({
-                    email: query
-                }) as WithId<userObject> | null;
-                break;
-            case 'token':
-                document = await db.collection('user').findOne({
-                    token: query
-                }) as WithId<userObject> | null;
-                break;
-            default:
-                throw new Error(`utils.getUserObject unknown query type ${type}`)
-        }
-        return document
-    }
-    async updateUserObject(objectID: ObjectId, updateObject: object): Promise<UpdateResult> {
-        return await db.collection('user').updateOne({
+    async updateObject(cata: string, objectID: ObjectId, updateObject: object): Promise<UpdateResult> {
+        if (!collections.includes(cata)) throw new Error("updateObject -> collection ${cata} is invaild");
+        return await db.collection(cata).updateOne({
             _id: objectID
         }, {
             $set: updateObject
         })
     }
-    // Ticket
-    async writeTicketObject(ticketObject: ticketObject): Promise<InsertOneResult> {
-        return await db.collection('ticket').insertOne(ticketObject)
-    }
-    async getTicketObject(ticket_uuid: string): Promise<null | WithId<ticketObject>> {
-        const document = await db.collection('ticket').findOne({
-            uuid: ticket_uuid
-        }) as  WithId<ticketObject> | null;
+    async getObject(cata: string, key: string, query: string): Promise<null | WithId<object>> {
+        if (!collections.includes(cata)) throw new Error("getObject -> collection ${cata} is invaild");
+        const document = await db.collection(cata).findOne({
+            [key]: query
+        }) as WithId<object> | null;
         return document
-    }
-    async updateTicketObject(objectID: ObjectId, updateObject: object): Promise<UpdateResult> {
-        return await db.collection('ticket').updateOne({
-            _id: objectID
-        }, {
-            $set: updateObject
-        })
     }
 }
 

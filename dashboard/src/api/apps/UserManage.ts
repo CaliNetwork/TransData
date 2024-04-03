@@ -1,5 +1,5 @@
 import { generateToken } from "toolbx";
-import { requestObject, returnObject, ticketObject, userObject } from "../../misc/type";
+import { orderConfigure, requestObject, returnObject, ticketObject, userObject, orderObject } from "../../misc/type";
 import { randomUUID } from "crypto";
 import utils from "../../misc/utils";
 import { WithId } from "mongodb";
@@ -10,10 +10,10 @@ class UserManage {
             succeed: true
         }
         const requestObject = contents.body;
-        if (await utils.getUserObject('email', requestObject.email)) {
+        if (await utils.getObject('user', 'email', requestObject.email)) {
             throw new Error("This email has been registered");
         } else {
-            utils.writeUserObject({
+            utils.writeObject('user', {
                 ...requestObject,
                 password: await Bun.password.hash(requestObject.password),
                 isbanned: false,
@@ -29,11 +29,11 @@ class UserManage {
             succeed: true
         }
         const requestObject = contents.body;
-        const userObject = await utils.getUserObject('email', requestObject.email);
+        const userObject = await utils.getObject('user', 'email', requestObject.email) as WithId<userObject> | null;
         if (userObject) {
             if (await Bun.password.verify(requestObject.password, userObject.password)) {
                 const newToken = generateToken(32);
-                await utils.updateUserObject(userObject._id, {
+                await utils.updateObject('user', userObject._id, {
                     uuid: randomUUID(),
                     token: newToken
                 });
@@ -46,24 +46,24 @@ class UserManage {
     }
     async resetPassword(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
-        utils.updateUserObject(userObject._id, {
+        utils.updateObject('user', userObject._id, {
             password: await Bun.password.hash(requestObject.password),
             token: undefined
         })
         return returnObject
     }
     async modifyTicket(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
-        let returnObject = {};
+        let returnObject: returnObject = {};
         let newTicketObject;
-        if (requestObject.ticket_uuid) {
-            const ticketObject = await utils.getTicketObject(requestObject.ticket_uuid)
+        if (requestObject.uuid) {
+            const ticketObject = await utils.getObject('ticket', 'uuid', requestObject.uuid) as WithId<ticketObject> | null
             if (ticketObject) {
                 newTicketObject = {
                     instance_uuid: requestObject.instance_uuid,
-                    contents: ticketObject.contents + requestObject.contents,
+                    contents: ticketObject.contents + '\n' + requestObject.contents,
                     isOpen: requestObject.isOpen
                 }
-                await utils.updateTicketObject(ticketObject._id, newTicketObject)
+                await utils.updateObject('ticket', ticketObject._id, newTicketObject)
             } else {
                 throw new Error("Ticket not found");
             }
@@ -75,7 +75,46 @@ class UserManage {
                 contents: requestObject.contents,
                 isOpen: true
             }
-            utils.writeTicketObject(newTicketObject);
+            returnObject.data = newTicketObject.uuid;
+            utils.writeObject('ticket', newTicketObject);
+        }
+        return returnObject
+    }
+    async placeOrder(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+        let returnObject: returnObject = {};
+        const uuid = randomUUID();
+        const drop_wait = await utils.getObject('setting', 'cata', 'order') as WithId<orderConfigure>
+        // add template logic here
+        await utils.writeObject('order', {
+            uuid: uuid,
+            template_uuid: requestObject.template_uuid,
+            instance_uuid: randomUUID(),
+            status: 'pending',
+            droptime: Math.floor(new Date().getTime() / 1000) + drop_wait.drop_wait
+        })
+        returnObject.data = uuid;
+        return returnObject
+    }
+    async cancelOrder(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+        let returnObject: returnObject = {};
+        const orderObject = await utils.getObject('order', 'uuid', requestObject.uuid) as WithId<orderObject> | null;
+        if (orderObject) {
+            await utils.updateObject('order', orderObject._id, {
+                status: 'cancel'
+            })
+        } else {
+            throw new Error("Order not found");
+        }
+        return returnObject
+    }
+    async vmServiceManage(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+        let returnObject: returnObject = {};
+        const action: string[] = ['reboot', 'shutdown', 'boot', 'rebuild']
+        const serviceObject = await utils.getObject('service', 'uuid', requestObject.uuid);
+        if (serviceObject) {
+            // Reminder: Add cluster driver app here
+        } else {
+            throw new Error("Instance not found");
         }
         return returnObject
     }

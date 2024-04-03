@@ -5,15 +5,18 @@ import { isDBSetup } from "./db/setup_db";
 import { Routers } from "./api/Routers";
 import { logger } from "toolbx";
 import { Gateway } from "./api/Gateway";
+import { ip } from "elysia-ip";
 
 const args = require('minimist')(Bun.argv.slice(2));
 export let main: mainVar = {
-  version: "skyline@1.0.0-OSS",
+  version: "Wayfarer@1.0.0-OSS",
   listen: args.l || args.listen || '127.0.0.1',
   port: args.p || args.port || 8080,
   db: args.d || args.database || 'mongodb://localhost:27017',
   cachedb: args.c || args.cachedb || 'redis://127.0.0.1:6379'
 };
+// Print banner
+logger(`Launching TransDataAPIserver VER ${main.version}`, 0)
 
 // Connect to the database
 export let resetDB = args.resetDB || false;
@@ -24,7 +27,8 @@ export const db = await database(main.db);
 await isDBSetup(resetDB)
 
 let app = new Elysia()
-  .get('/', () => `TransDataAPIserver VER ${main.version}`) // Send back server banner
+  .use(ip({ headersOnly: true }))
+  .get('/', () => `> TransDataAPIserver VER ${main.version}`) // Send back server banner
 // Load routers
 Routers.forEach((obj) => {
   app.all(obj.path, async (contents: requestObject) => {

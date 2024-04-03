@@ -14,17 +14,18 @@ export interface userObject {
     balance: number
     register_on: number
     isAdmin: boolean
+    address?: string
+    phone_code?: number
+    phone_number?: number
     token?: string
 }
 
 export interface orderObject {
     uuid: string
     template_uuid: string
-    address: string
-    phone_code: number
-    phone_number: number
-    instance_uuid: number
-    isFinished: boolean
+    instance_uuid: string
+    status: string
+    droptime: number
 }
 
 export interface billingObject {
@@ -55,24 +56,29 @@ export interface serviceObject {
     spe_details?: vmService | portForwardingService
 }
 
+export interface orderConfigure {
+    cata: string
+    drop_wait: number
+}
+
 export interface billingConfigure {
-    cata: settingsCata
+    cata: string
     currency: string
 }
 
 export interface clusterConfigure {
-    cata: settingsCata
+    cata: string
     token: string
 }
 
 export interface siteConfigure {
-    cata: settingsCata
+    cata: string
     hasSetup: boolean
-    rootToken: string
+    root_token: string
 }
 
 export interface serviceTemplate {
-    cata: settingsCata
+    cata: string
     templates: serviceTemplateObject[]
 }
 
@@ -141,13 +147,6 @@ enum billing_cycle {
     annually,
 }
 
-enum settingsCata {
-    billingConfigure,
-    clusterConfigure,
-    siteConfigure,
-    serviceTemplate
-}
-
 
 // In-Program components
 
@@ -175,7 +174,12 @@ export interface requestObject {
     params: Record<string, string | undefined>
     headers: Record<string, string | undefined>
     response: resultObject
-    path: string
+    path: string,
+    ip: {
+        address: string;
+        family: string;
+        port: number;
+    }
 };
 
 export interface routerObject {
