@@ -9,14 +9,14 @@ import { ip } from "elysia-ip";
 
 const args = require('minimist')(Bun.argv.slice(2));
 export let main: mainVar = {
-  version: "Wayfarer@1.0.0-OSS",
+  version: "Carousel@1.0.0-OSS",
   listen: args.l || args.listen || '127.0.0.1',
   port: args.p || args.port || 8080,
   db: args.d || args.database || 'mongodb://localhost:27017',
   cachedb: args.c || args.cachedb || 'redis://127.0.0.1:6379'
 };
 // Print banner
-logger(`Launching TransDataAPIserver VER ${main.version}`, 0)
+logger(`Launching TransDataAPIserver ${main.version}`, 1)
 
 // Connect to the database
 export let resetDB = args.resetDB || false;
