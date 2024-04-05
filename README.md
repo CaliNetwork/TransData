@@ -1,6 +1,6 @@
 # ![logo](https://raw.githubusercontent.com/CaliNetwork/TransData/main/artworks/logo.svg)
 
-The Integrated dashboard for cloud service, build for Hairpin Cloud
+The Integrated dashboard for cloud Instance, build for Hairpin Cloud
 Platform™
 
 ![MadeinTainan](https://raw.githubusercontent.com/CaliNetwork/TransData/main/documents/MITN.svg)

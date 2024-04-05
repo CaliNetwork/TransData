@@ -22,6 +22,7 @@ export interface userObject {
 
 export interface orderObject {
     uuid: string
+    user_uuid: string
     template_uuid: string
     instance_uuid: string
     status: string
@@ -45,15 +46,17 @@ export interface ticketObject {
 
 export interface clusterObject {
     uuid: string
-    type: serviceType
+    type: InstanceType
     apiurl: string
 }
 
-export interface serviceObject {
+export interface InstanceObject {
     uuid: string
+    name: string
+    user_uuid: string
     cluster_uuid: string
     template_uuid: string
-    spe_details?: vmService | portForwardingService
+    details: vmInstance | portForwardingInstance
 }
 
 export interface orderConfigure {
@@ -77,32 +80,31 @@ export interface siteConfigure {
     root_token: string
 }
 
-export interface serviceTemplate {
+export interface InstanceTemplate {
     cata: string
-    templates: serviceTemplateObject[]
+    templates: InstanceTemplateObject[]
 }
 
-export interface serviceTemplateObject {
+export interface InstanceTemplateObject {
     uuid: string
-    type: serviceType
+    type: InstanceType
     price: number
     billing_cycle: billing_cycle
     hasIPV6: boolean
-    VM?: {
+    details: {
         type: VmType
         cpu: number
         mem: number
         bandwidth: number
         traffic: number
-    }
-    PortForwarding?: {
+    } | {
         bandwidth: number
         traffic: number
     }
 }
 // Componments
 
-interface vmService {
+interface vmInstance {
     traffic_used: number
     hasTun: boolean
     os: string
@@ -113,11 +115,7 @@ interface vmService {
     }
 }
 
-interface portForwardingService {
-    from: {
-        ip: string
-        port: number
-    }
+interface portForwardingInstance {
     to: {
         ip: string
         port: number
@@ -125,12 +123,12 @@ interface portForwardingService {
     connection_details: {
         ipv4?: string
         ipv6?: string
-        portRange?: number[]
+        port?: number
     },
     traffic_used: number
 }
 
-enum serviceType {
+enum InstanceType {
     PortForwarding,
     VM
 }

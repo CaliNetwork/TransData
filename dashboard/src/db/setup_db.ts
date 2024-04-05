@@ -32,7 +32,7 @@ export const isDBSetup = async (resetDB: boolean): Promise<void> => {
         if (hasDebug) logger('debug> Checking if the database has been set up', 4)
         const collectionsToCheck: string[] = [
             'user',
-            'service',
+            'Instance',
             'billing',
             'ticket',
             'order',

@@ -1,5 +1,5 @@
 import { generateToken } from "toolbx";
-import { orderConfigure, requestObject, returnObject, ticketObject, userObject, orderObject } from "../../misc/type";
+import { orderConfigure, requestObject, returnObject, ticketObject, userObject, orderObject, InstanceObject } from "../../misc/type";
 import { randomUUID } from "crypto";
 import utils from "../../misc/utils";
 import { WithId } from "mongodb";
@@ -44,16 +44,18 @@ class UserManage {
         }
         return returnObject
     }
-    async resetPassword(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+    async resetPassword(fullRequestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
+        const requestObject = fullRequestObject.body;
         utils.updateObject('user', userObject._id, {
             password: await Bun.password.hash(requestObject.password),
             token: undefined
         })
         return returnObject
     }
-    async modifyTicket(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+    async modifyTicket(fullRequestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
+        const requestObject = fullRequestObject.body;
         let newTicketObject;
         if (requestObject.uuid) {
             const ticketObject = await utils.getObject('ticket', 'uuid', requestObject.uuid) as WithId<ticketObject> | null
@@ -80,13 +82,15 @@ class UserManage {
         }
         return returnObject
     }
-    async placeOrder(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+    async placeOrder(fullRequestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
+        const requestObject = fullRequestObject.body;
         const uuid = randomUUID();
         const drop_wait = await utils.getObject('setting', 'cata', 'order') as WithId<orderConfigure>
         // add template logic here
         await utils.writeObject('order', {
             uuid: uuid,
+            user_uuid: userObject.uuid,
             template_uuid: requestObject.template_uuid,
             instance_uuid: randomUUID(),
             status: 'pending',
@@ -95,8 +99,9 @@ class UserManage {
         returnObject.data = uuid;
         return returnObject
     }
-    async cancelOrder(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+    async cancelOrder(fullRequestObject: any, _userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
+        const requestObject = fullRequestObject.body;
         const orderObject = await utils.getObject('order', 'uuid', requestObject.uuid) as WithId<orderObject> | null;
         if (orderObject) {
             await utils.updateObject('order', orderObject._id, {
@@ -107,14 +112,31 @@ class UserManage {
         }
         return returnObject
     }
-    async vmServiceManage(requestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
+    async vmInstanceManage(fullRequestObject: any, _userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
-        const action: string[] = ['reboot', 'shutdown', 'boot', 'rebuild']
-        const serviceObject = await utils.getObject('service', 'uuid', requestObject.uuid);
-        if (serviceObject) {
+        const requestObject = fullRequestObject.body;
+        const action: string[] = ['reboot', 'shutdown', 'boot', 'rebuild', 'rename']
+        if (!action.includes(requestObject.action)) throw new Error("Invaild action");
+        const InstanceObject = await utils.getObject('Instance', 'uuid', requestObject.uuid);
+        if (InstanceObject) {
             // Reminder: Add cluster driver app here
         } else {
             throw new Error("Instance not found");
+        }
+        return returnObject
+    }
+    async pfInstanceManage(fullRequestObject: any, _userObject: WithId<userObject>): Promise<returnObject> {
+        let returnObject: returnObject = {};
+        const requestObject = fullRequestObject.body;
+        const InstanceObject = await utils.getObject('Instance', 'uuid', requestObject.uuid) as WithId<InstanceObject> | null;
+        if (InstanceObject) {
+            const newInstanceObject = {
+                name: requestObject.name && requestObject.name,
+                details: requestObject.to && requestObject.to
+            }
+            await utils.updateObject('instance', InstanceObject._id, newInstanceObject)
+        } else {
+            throw new Error("Instance not found")
         }
         return returnObject
     }

@@ -1,6 +1,7 @@
 import { routerObject } from "../misc/type";
 import UserManage from "./apps/UserManage";
 import { t } from "elysia";
+import { userStats } from "./apps/UserStats";
 
 
 export const Routers: routerObject[] = [
@@ -75,6 +76,44 @@ export const Routers: routerObject[] = [
         schema: {
             body: t.Object({
                 uuid: t.String()
+            })
+        }
+    },
+    {
+        path: "/api/manage/instance/vm",
+        handler: UserManage.vmInstanceManage,
+        isAdmin: false,
+        authType: 'token',
+        schema: {
+            body: t.Object({
+                action: t.String(),
+                name: t.Optional(t.String())
+            })
+        }
+    },
+    {
+        path: "/api/manage/instance/portforwarding",
+        handler: UserManage.vmInstanceManage,
+        isAdmin: false,
+        authType: 'token',
+        schema: {
+            body: t.Object({
+                to: t.Optional(t.Object({
+                    ip: t.String(),
+                    port: t.Numeric()
+                })),
+                name: t.Optional(t.String())
+            })
+        }
+    },
+    {
+        path: "/api/stats/:cata",
+        handler: userStats,
+        isAdmin: false,
+        authType: 'token',
+        schema: {
+            params: t.Object({
+                cata: t.String()
             })
         }
     }

@@ -2,7 +2,7 @@
 
 image::https://raw.githubusercontent.com/CaliNetwork/TransData/main/artworks/logo.svg[]
 
-The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
+The Integrated dashboard for cloud Instance, build for Hairpin Cloud Platform™
 
 == Designs
 
@@ -25,7 +25,7 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
                 *[#lightgreen] PaymentGateway
             *[#lightblue] Ticket
                 *[#lightgreen] ModifyTicket
-            *[#lightblue] Service
+            *[#lightblue] Instance
                 *[#lightblue] VM/<uuid>
                     *[#lightgreen] Reboot
                     *[#lightgreen] Shutdown
@@ -40,7 +40,7 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
             *[#lightgreen] GetOrder
             *[#lightgreen] GetBilling
             *[#lightgreen] GetTicket
-            *[#lightgreen] GetService
+            *[#lightgreen] GetInstance
 
         *[#orange] AdminManage
             *[#orange] User
@@ -57,12 +57,12 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
                 *[#pink] SetClusterToken
                 *[#pink] RemoveCluster
                 *[#pink] ModifyClusterObject
-            *[#orange] Service
-                *[#pink] ModifyServiceObject
-                *[#pink] DeleteService
-            *[#orange] ServiceTemplate
-                *[#pink] ModifyServiceTemplateObject
-                *[#pink] DeleteServiceTemplate
+            *[#orange] Instance
+                *[#pink] ModifyInstanceObject
+                *[#pink] DeleteInstance
+            *[#orange] InstanceTemplate
+                *[#pink] ModifyInstanceTemplateObject
+                *[#pink] DeleteInstanceTemplate
         *[#orange] AdminStats
             *[#pink] GetUser
             *[#pink] GetOrder
@@ -71,8 +71,8 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
             *[#pink] GetTicket
             *[#pink] GetCluster
             *[#pink] GetClusterStatus
-            *[#pink] GetService
-            *[#pink] GetServiceStatus
+            *[#pink] GetInstance
+            *[#pink] GetInstanceStatus
 @endmindmap
 ....
 
@@ -84,8 +84,8 @@ The Integrated dashboard for cloud service, build for Hairpin Cloud Platform™
 object user {
     UserObject
 }
-object service {
-    serviceObject
+object Instance {
+    InstanceObject
 }
 object billing {
     billingObject
@@ -103,7 +103,7 @@ object setting {
     billingConfigure
     clusterConfigure
     siteConfigure
-    serviceTemplate
+    InstanceTemplate
     siteBroadcast
 }
 @enduml
