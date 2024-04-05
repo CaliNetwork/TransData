@@ -24,24 +24,26 @@ class Utils {
             $set: updateObject
         })
     }
-    async getObject(cata: string, key: string, query: string): Promise<null | WithId<object>> {
+    async getObject(cata: string, key: string, query: string, quantity?: number, forceArray?: boolean): Promise<null | WithId<object>[] | WithId<object>> {
         if (!collections.includes(cata)) throw new Error("getObject -> collection ${cata} is invaild");
-        const document = await db.collection(cata).findOne({
-            [key]: query
-        });
-        return document
-    }
-    async getManyObject(cata: string, key: string, query: string): Promise<null | WithId<object>[]> {
-        if (!collections.includes(cata)) throw new Error("getObject -> collection ${cata} is invaild");
-        const document: WithId<object>[] | null = [];
-        const cursor = db.collection(cata).find({
+        let document: WithId<object>[] | null = [];
+        let cursor = db.collection(cata).find({
             [key]: query
         })
+        if (quantity !== undefined) {
+            cursor = cursor.limit(quantity);
+        } else {
+            cursor = cursor.limit(1);
+        }
         for await (let docWithID of cursor) {
             const { _id, document } = docWithID
             document.push(document)
         }
-        return document
+        if (document.length > 1) {
+            return document
+        } else {
+            return forceArray ? document : document[0]
+        }
     }
 }
 

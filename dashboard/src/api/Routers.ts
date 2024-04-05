@@ -107,13 +107,14 @@ export const Routers: routerObject[] = [
         }
     },
     {
-        path: "/api/stats/:cata",
+        path: "/api/stats/:cata/:quantity",
         handler: userStats,
         isAdmin: false,
         authType: 'token',
         schema: {
             params: t.Object({
-                cata: t.String()
+                cata: t.String(),
+                quantity: t.Optional(t.String())
             })
         }
     }
