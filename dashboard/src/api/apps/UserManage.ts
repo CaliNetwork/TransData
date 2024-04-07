@@ -56,21 +56,20 @@ class UserManage {
     async modifyTicket(fullRequestObject: any, userObject: WithId<userObject>): Promise<returnObject> {
         let returnObject: returnObject = {};
         const requestObject = fullRequestObject.body;
-        let newTicketObject;
         if (requestObject.uuid) {
             const ticketObject = await utils.getObject('ticket', 'uuid', requestObject.uuid) as WithId<ticketObject> | null
             if (ticketObject) {
-                newTicketObject = {
+                let updateTicketObject = {
                     instance_uuid: requestObject.instance_uuid,
                     contents: ticketObject.contents + '\n' + requestObject.contents,
                     isOpen: requestObject.isOpen
                 }
-                await utils.updateObject('ticket', ticketObject._id, newTicketObject)
+                await utils.updateObject('ticket', ticketObject._id, updateTicketObject)
             } else {
                 throw new Error("Ticket not found");
             }
         } else {
-            newTicketObject = {
+            let newTicketObject = {
                 uuid: randomUUID(),
                 user_uuid: userObject.uuid,
                 instance_uuid: requestObject.instance_uuid,
@@ -130,11 +129,11 @@ class UserManage {
         const requestObject = fullRequestObject.body;
         const InstanceObject = await utils.getObject('Instance', 'uuid', requestObject.uuid) as WithId<InstanceObject> | null;
         if (InstanceObject) {
-            const newInstanceObject = {
+            const updateInstanceObject = {
                 name: requestObject.name && requestObject.name,
                 details: requestObject.to && requestObject.to
             }
-            await utils.updateObject('instance', InstanceObject._id, newInstanceObject)
+            await utils.updateObject('instance', InstanceObject._id, updateInstanceObject)
         } else {
             throw new Error("Instance not found")
         }

@@ -30,7 +30,7 @@ class Utils {
         let cursor = db.collection(cata).find({
             [key]: query
         })
-        if (quantity !== undefined) {
+        if (quantity) {
             cursor = cursor.limit(quantity);
         } else {
             cursor = cursor.limit(1);

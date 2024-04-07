@@ -2,6 +2,7 @@ import { routerObject } from "../misc/type";
 import UserManage from "./apps/UserManage";
 import { t } from "elysia";
 import { userStats } from "./apps/UserStats";
+import AdminManager from "./apps/AdminManager";
 
 
 export const Routers: routerObject[] = [
@@ -115,6 +116,46 @@ export const Routers: routerObject[] = [
             params: t.Object({
                 cata: t.String(),
                 quantity: t.Optional(t.String())
+            })
+        }
+    },
+    // Admin Routers
+    {
+        path: "/api/admin/manage/user",
+        handler: AdminManager.modifyUserObject,
+        isAdmin: true,
+        authType: 'token',
+        schema: {
+            body: t.Object({
+                uuid: t.Optional(t.String()),
+                object: t.Object({
+                    email: t.String(),
+                    password: t.String(),
+                    isbanned: t.Boolean(),
+                    balance: t.Number(),
+                    register_on: t.Number(),
+                    isAdmin: t.Boolean(),
+                    address: t.Optional(t.String()),
+                    phone_code: t.Optional(t.Number()),
+                    phone_number: t.Optional(t.Number()),
+                    token: t.Optional(t.String())
+                })
+            })
+        }
+    },
+    {
+        path: "/api/admin/manage/order",
+        handler: AdminManager.modifyOrderObject,
+        isAdmin: true,
+        authType: 'token',
+        schema: {
+            body: t.Object({
+                uuid: t.Optional(t.String()),
+                object: t.Object({
+                    user_uuid: t.String(),
+                    template_uuid: t.String(),
+                    status: t.String()
+                })
             })
         }
     }

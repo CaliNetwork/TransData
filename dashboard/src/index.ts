@@ -16,7 +16,7 @@ export let main: mainVar = {
   cachedb: args.c || args.cachedb || 'redis://127.0.0.1:6379'
 };
 // Print banner
-logger(`Launching TransDataAPIserver ${main.version}`, 1)
+logger(`- Launching TransDataAPIserver ${main.version} -`, 1)
 
 // Connect to the database
 export let resetDB = args.resetDB || false;
