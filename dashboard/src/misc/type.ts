@@ -67,6 +67,7 @@ export interface orderConfigure {
 export interface billingConfigure {
     cata: string
     currency: string
+    method: string
 }
 
 export interface clusterConfigure {

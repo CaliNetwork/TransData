@@ -2,7 +2,7 @@ import { routerObject } from "../misc/type";
 import UserManage from "./apps/UserManage";
 import { t } from "elysia";
 import { userStats } from "./apps/UserStats";
-import AdminManager from "./apps/AdminManager";
+import AdminManage from "./apps/AdminManage";
 
 
 export const Routers: routerObject[] = [
@@ -122,7 +122,7 @@ export const Routers: routerObject[] = [
     // Admin Routers
     {
         path: "/api/admin/manage/user",
-        handler: AdminManager.modifyUserObject,
+        handler: AdminManage.modifyUserObject,
         isAdmin: true,
         authType: 'token',
         schema: {
@@ -145,7 +145,7 @@ export const Routers: routerObject[] = [
     },
     {
         path: "/api/admin/manage/order",
-        handler: AdminManager.modifyOrderObject,
+        handler: AdminManage.modifyOrderObject,
         isAdmin: true,
         authType: 'token',
         schema: {
@@ -156,6 +156,38 @@ export const Routers: routerObject[] = [
                     template_uuid: t.String(),
                     status: t.String()
                 })
+            })
+        }
+    },
+    {
+        path: "/api/admin/manage/billing",
+        handler: AdminManage.billingManage,
+        isAdmin: true,
+        authType: 'token',
+        schema: {
+            body: t.Object({
+                action: t.String(),
+                object: t.Object({
+                    conf: t.Optional(t.Object({
+                        method: t.String(),
+                        currency: t.String()
+                    })),
+                    uuid: t.Optional(t.String())
+                })
+            })
+        }
+    },
+    {
+        path: "/api/admin/manage/modifyticket",
+        handler: AdminManage.modifyTicket,
+        isAdmin: true,
+        authType: "token",
+        schema: {
+            body: t.Object({
+                contents: t.String(),
+                isOpen: t.Boolean(),
+                uuid: t.Optional(t.String()),
+                instance_uuid: t.Optional(t.String())
             })
         }
     }

@@ -6,8 +6,8 @@ const setupDB = async (collectionsToCheck: string[]): Promise<void> => {
         if (hasDebug) logger('debug> Setting up the database', 4)
         collectionsToCheck.forEach((element) => {
             db.createCollection(element);
-            if (element === 'settings') {
-                db.collection('settings').insertOne(
+            if (element === 'setting') {
+                db.collection('setting').insertOne(
                     {
                         cata: 'siteConfigure',
                         hasSetup: false,
